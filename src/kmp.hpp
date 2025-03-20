@@ -27,7 +27,7 @@
 
 // lpfun long prefix function - это функция, которая для каждого символа в шаблоне 
 // рассчитывает длину максимального суффикса подстроки, совпадающего с её префиксом.
-inline size_t* lpfun(const std::string& pattern) noexcept {
+inline size_t* lpfun(const std::string& pattern) {
     size_t size_ = pattern.size();
     // Выделяем на куче память под массив размером size_ элементов типа size_t.
     size_t* pie = (size_t*)malloc(size_ * sizeof(size_t));
@@ -56,7 +56,7 @@ inline size_t* lpfun(const std::string& pattern) noexcept {
 // Функция kmp_search выполняет поиск шаблона (pattern) в тексте (text), 
 // возвращая массив позиций, где шаблон найден. В *match_count возвращается 
 // общее число совпадений.
-inline size_t* kmp_search(const std::string& text, const std::string& pattern, size_t* match_count) noexcept {
+inline size_t* kmp_search(const std::string& text, const std::string& pattern, size_t* match_count) {
     size_t size_ = pattern.size();
 
     if (size_ == 0 || text.size() < size_) {

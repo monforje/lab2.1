@@ -40,20 +40,20 @@ struct Node {
     // pattern_indices: индексы шаблонов, которые оканчиваются в данном узле.
     std::vector<int> pattern_indices;
 
-    Node(Node* p = nullptr, char c = '\0') noexcept : parent(p), charToParent(c) {}
+    Node(Node* p = nullptr, char c = '\0') : parent(p), charToParent(c) {}
 };
 
-inline Node* createNode(Node* parent = nullptr, char c = '\0') noexcept {
+inline Node* createNode(Node* parent = nullptr, char c = '\0') {
     return new Node(parent, c);
 }
 
 static Node* root = nullptr;
 
-inline void initTrie() noexcept {
+inline void initTrie() {
     root = createNode();
 }
 
-inline void addString(const std::string& word, size_t index) noexcept {
+inline void addString(const std::string& word, size_t index) {
     Node* cur = root;
     for (const char c : word) {
         auto& child = cur->son[c];
@@ -66,11 +66,11 @@ inline void addString(const std::string& word, size_t index) noexcept {
     cur->pattern_indices.push_back(static_cast<int>(index));
 }
 
-static Node* getSuffLink(Node* v) noexcept;
-static Node* getLink(Node* v, char c) noexcept;
-static Node* getUp(Node* v) noexcept;
+static Node* getSuffLink(Node* v);
+static Node* getLink(Node* v, char c);
+static Node* getUp(Node* v);
 
-inline static Node* getSuffLink(Node* v) noexcept {
+inline static Node* getSuffLink(Node* v) {
     if (!v->suffLink) {
         if (v == root || v->parent == root) {
             v->suffLink = root;
@@ -81,7 +81,7 @@ inline static Node* getSuffLink(Node* v) noexcept {
     return v->suffLink;
 }
 
-inline static Node* getLink(Node* v, char c) noexcept {
+inline static Node* getLink(Node* v, char c) {
     auto it = v->go.find(c);
     if (it == v->go.end()) {
         if (v->son.count(c)) {
@@ -93,7 +93,7 @@ inline static Node* getLink(Node* v, char c) noexcept {
     return v->go[c];
 }
 
-inline static Node* getUp(Node* v) noexcept {
+inline static Node* getUp(Node* v) {
     if (!v->up) {
         Node* sufflink = getSuffLink(v);
         v->up = (sufflink->isTerminal) 
@@ -103,7 +103,7 @@ inline static Node* getUp(Node* v) noexcept {
     return v->up;
 }
 
-inline void buildAutomation(const std::vector<std::string>& patterns) noexcept {
+inline void buildAutomation(const std::vector<std::string>& patterns) {
     initTrie();
 
     for (size_t i = 0; i < patterns.size(); ++i) {
@@ -147,7 +147,7 @@ inline void buildAutomation(const std::vector<std::string>& patterns) noexcept {
 // Возвращает true, если найдены все шаблоны, иначе — false.
 // Параметр count указывает, сколько шаблонов требуется найти.
 // (Если каждый шаблон нужно найти хотя бы один раз.)
-[[nodiscard]] bool AhoSearch(const std::string& text, const std::vector<std::string>& patterns, size_t count) noexcept {
+[[nodiscard]] bool AhoSearch(const std::string& text, const std::vector<std::string>& patterns, size_t count) {
     buildAutomation(patterns);
 
     std::vector<bool> found(count, false);
@@ -176,7 +176,7 @@ inline void buildAutomation(const std::vector<std::string>& patterns) noexcept {
     return found_count == count;
 }
 
-inline void deleteTrie(Node* node) noexcept {
+inline void deleteTrie(Node* node) {
     if (node) {
         for (auto& child : node->son) {
             deleteTrie(child.second.release());
